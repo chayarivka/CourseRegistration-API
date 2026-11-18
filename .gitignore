@@ -1,0 +1,25 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build files
+**/bin/
+**/obj/
+
+# Local settings and secrets
+secrets.json
+**/appsettings.Development.json
+.env
+.env.*
+
+# Logs
+**/logs/
+*.log
+
+# NuGet
+*.nupkg
+
+# Node.js
+node_modules/
+/CourseRegistration.Client/
