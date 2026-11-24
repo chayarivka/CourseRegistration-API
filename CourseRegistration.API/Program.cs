@@ -71,12 +71,16 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
+var clientOrigin = builder.Configuration["Cors:ClientOrigin"];
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ClientPolicy", policy =>
     {
         policy.SetIsOriginAllowed(origin =>
-                new Uri(origin).IsLoopback)
+            new Uri(origin).IsLoopback ||
+            string.Equals(origin, clientOrigin,
+                StringComparison.OrdinalIgnoreCase))
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -172,11 +176,8 @@ app.UseMiddleware<CorrelationIdMiddleware>();
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
