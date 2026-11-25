@@ -72,18 +72,18 @@ namespace CourseRegistration.Data.Repositories
         {
             var strategy = _context.Database.CreateExecutionStrategy();
 
-            await strategy.ExecuteAsync(async () =>
+            await strategy.ExecuteAsync(async attemptToken =>
             {
                 _context.ChangeTracker.Clear();
                 await using var transaction =
                     await _context.Database.BeginTransactionAsync(
                         IsolationLevel.Serializable,
-                        cancellationToken);
+                        attemptToken);
 
-                await operation(cancellationToken);
+                await operation(attemptToken);
 
-                await transaction.CommitAsync(cancellationToken);
-            });
+                await transaction.CommitAsync(attemptToken);
+            }, cancellationToken);
         }
 
     }

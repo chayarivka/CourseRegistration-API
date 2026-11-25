@@ -24,22 +24,44 @@ namespace CourseRegistration.Data.Repositories
             int id, CancellationToken cancellationToken = default)
         {
             return await _context.Courses
-                .Include(c => c.Category)
-                .Include(c => c.Registrations)
                 .FirstOrDefaultAsync(
                     c => c.Id == id, cancellationToken);
         }
 
 
 
-        public async Task<List<Course>> GetAllAsync(
+        public Task<CourseResponseDto?> GetResponseByIdAsync(
+            int id, CancellationToken cancellationToken = default)
+        {
+            return ProjectResponses(_context.Courses.Where(c => c.Id == id))
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public Task<List<CourseResponseDto>> GetAllAsync(
             CancellationToken cancellationToken = default)
         {
-            return await _context.Courses
-                .AsNoTracking()
-                .Include(c => c.Category)
-                .Include(c => c.Registrations)
-                .ToListAsync(cancellationToken);
+            return ProjectResponses(_context.Courses).ToListAsync(cancellationToken);
+        }
+
+        private static IQueryable<CourseResponseDto> ProjectResponses(IQueryable<Course> courses)
+        {
+            return courses.AsNoTracking().Select(course => new CourseResponseDto
+            {
+                Id = course.Id,
+                Name = course.Name,
+                Description = course.Description,
+                Price = course.Price,
+                StartDate = course.StartDate,
+                StartTime = course.StartTime,
+                LecturerName = course.LecturerName,
+                NumberOfMeetings = course.NumberOfMeetings,
+                Capacity = course.Capacity,
+                AvailableSeats = course.Capacity - course.Registrations.Count(
+                    registration => registration.Status == RegistrationStatus.Active),
+                CategoryId = course.CategoryId,
+                CategoryName = course.Category.Name,
+                RowVersion = course.RowVersion
+            });
         }
 
 
@@ -93,15 +115,12 @@ namespace CourseRegistration.Data.Repositories
                 .OriginalValue = rowVersion;
         }
 
-        public async Task<List<Course>> SearchAsync(
+        public Task<List<CourseResponseDto>> SearchAsync(
             CourseQueryDto query,
             CancellationToken cancellationToken = default)
         {
-            var courses = _context.Courses
-                .AsNoTracking()
-                .Include(c => c.Category)
-                .Include(c => c.Registrations)
-                .AsQueryable();
+            int skip = checked((int)query.GetOffset());
+            var courses = _context.Courses.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(query.Search))
             {
@@ -130,11 +149,7 @@ namespace CourseRegistration.Data.Repositories
                         .ThenBy(c => c.StartTime).ThenBy(c => c.Id)
             };
 
-            int skip = (query.Page - 1) * query.PageSize;
-
-            return await courses
-                .Skip(skip)
-                .Take(query.PageSize)
+            return ProjectResponses(courses.Skip(skip).Take(query.PageSize))
                 .ToListAsync(cancellationToken);
         }
 

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CourseRegistration.Core.DTOs
 {
-    public class CourseQueryDto
+    public class CourseQueryDto : IValidatableObject
     {
         public string? Search { get; set; }
 
@@ -18,5 +18,17 @@ namespace CourseRegistration.Core.DTOs
 
         [Range(1, 10)]
         public int PageSize { get; set; } = 10;
+
+        public long GetOffset() => ((long)Page - 1) * PageSize;
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (GetOffset() > int.MaxValue)
+            {
+                yield return new ValidationResult(
+                    "The requested page exceeds the supported pagination offset.",
+                    new[] { nameof(Page) });
+            }
+        }
     }
 }

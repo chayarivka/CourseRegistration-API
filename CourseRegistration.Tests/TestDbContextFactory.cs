@@ -8,7 +8,7 @@ namespace CourseRegistration.Tests
 {
     public  class TestDbContextFactory
     {
-        public static AppDbContext Create()
+        public static AppDbContext Create(bool enableRetries = false)
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
@@ -27,7 +27,13 @@ namespace CourseRegistration.Tests
             }
 
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseSqlServer(connectionString)
+                .UseSqlServer(connectionString, sql =>
+                {
+                    if (enableRetries)
+                    {
+                        sql.EnableRetryOnFailure();
+                    }
+                })
                 .Options;
 
             return new AppDbContext(options);

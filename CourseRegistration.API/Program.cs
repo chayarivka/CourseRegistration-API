@@ -168,7 +168,8 @@ using (var scope = app.Services.CreateScope())
        context,
        passwordHasher,
        app.Configuration,
-       app.Environment.IsDevelopment());
+       app.Environment.IsDevelopment(),
+       app.Lifetime.ApplicationStopping);
 }
 
     app.UseMiddleware<ExceptionHandlingMiddleware>();

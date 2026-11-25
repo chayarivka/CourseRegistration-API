@@ -19,22 +19,16 @@ namespace CourseRegistration.Service.Services
             _mapper = mapper;
         }
 
-        public async Task<CourseResponseDto?> GetByIdAsync(
+        public Task<CourseResponseDto?> GetByIdAsync(
             int id, CancellationToken cancellationToken = default)
         {
-            var course = await _courseRepository.GetByIdAsync(
-                id, cancellationToken);
-
-            return _mapper.Map<CourseResponseDto?>(course);
+            return _courseRepository.GetResponseByIdAsync(id, cancellationToken);
         }
 
-        public async Task<List<CourseResponseDto>> GetAllAsync(
+        public Task<List<CourseResponseDto>> GetAllAsync(
             CancellationToken cancellationToken = default)
         {
-            var courses = await _courseRepository.GetAllAsync(
-                cancellationToken);
-
-            return _mapper.Map<List<CourseResponseDto>>(courses);
+            return _courseRepository.GetAllAsync(cancellationToken);
         }
 
 
@@ -60,10 +54,8 @@ namespace CourseRegistration.Service.Services
             await _courseRepository.AddAsync(course, cancellationToken);
             await _courseRepository.SaveChangesAsync(cancellationToken);
 
-            var createdCourse = await _courseRepository.GetByIdAsync(
-                course.Id, cancellationToken);
-
-            return _mapper.Map<CourseResponseDto>(createdCourse);
+            return (await _courseRepository.GetResponseByIdAsync(
+                course.Id, cancellationToken))!;
         }
 
 
@@ -145,14 +137,11 @@ namespace CourseRegistration.Service.Services
             return true;
         }
 
-        public async Task<List<CourseResponseDto>> SearchAsync(
+        public Task<List<CourseResponseDto>> SearchAsync(
             CourseQueryDto query,
             CancellationToken cancellationToken = default)
         {
-            var courses = await _courseRepository.SearchAsync(
-                query, cancellationToken);
-
-            return _mapper.Map<List<CourseResponseDto>>(courses);
+            return _courseRepository.SearchAsync(query, cancellationToken);
         }
 
 
