@@ -14,7 +14,8 @@ namespace CourseRegistration.Data.Seed
             AppDbContext context,
             IPasswordHasher<User> passwordHasher,
             IConfiguration configuration,
-            bool isDevelopment)
+            bool isDevelopment,
+            CancellationToken cancellationToken)
         {
             string? email = configuration["AdminSeed:Email"];
             string? password = configuration["AdminSeed:Password"];
@@ -36,7 +37,7 @@ namespace CourseRegistration.Data.Seed
                 var existingAdmin = await context.Users
                     .FirstOrDefaultAsync(u =>
                         u.Email == email &&
-                        u.Role == UserRole.Admin);
+                        u.Role == UserRole.Admin, cancellationToken);
 
                 if (existingAdmin == null)
                 {
@@ -47,13 +48,13 @@ namespace CourseRegistration.Data.Seed
                 existingAdmin.PasswordHash =
                     passwordHasher.HashPassword(existingAdmin, password);
 
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(cancellationToken);
                 return;
             }
 
             // Do not create another admin if one already exists.
             bool adminExists = await context.Users
-                .AnyAsync(u => u.Role == UserRole.Admin);
+                .AnyAsync(u => u.Role == UserRole.Admin, cancellationToken);
 
             if (adminExists)
                 return;
@@ -71,8 +72,8 @@ namespace CourseRegistration.Data.Seed
             admin.PasswordHash =
                 passwordHasher.HashPassword(admin, password);
 
-            context.Users.Add(admin);
-            await context.SaveChangesAsync();
+            await context.Users.AddAsync(admin, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
         }
     }
 }

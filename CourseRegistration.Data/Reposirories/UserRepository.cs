@@ -20,6 +20,7 @@ namespace CourseRegistration.Data.Repositories
             CancellationToken cancellationToken = default)
         {
             return await _context.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(
                     u => u.Email == email,
                     cancellationToken);
@@ -30,6 +31,7 @@ namespace CourseRegistration.Data.Repositories
             CancellationToken cancellationToken = default)
         {
             return await _context.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(
                     u => u.Id == id,
                     cancellationToken);

@@ -10,7 +10,10 @@ namespace CourseRegistration.Core.Interfaces
         Task<Course?> GetByIdAsync(
             int id, CancellationToken cancellationToken = default);
 
-        Task<List<Course>> GetAllAsync(
+        Task<CourseResponseDto?> GetResponseByIdAsync(
+            int id, CancellationToken cancellationToken = default);
+
+        Task<List<CourseResponseDto>> GetAllAsync(
             CancellationToken cancellationToken = default);
 
         Task AddAsync(
@@ -34,7 +37,7 @@ namespace CourseRegistration.Core.Interfaces
         void SetOriginalRowVersion(
             Course course, byte[] rowVersion);
 
-        Task<List<Course>> SearchAsync(
+        Task<List<CourseResponseDto>> SearchAsync(
             CourseQueryDto query,
             CancellationToken cancellationToken = default);
 
