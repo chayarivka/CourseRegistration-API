@@ -2,6 +2,7 @@
 using CourseRegistration.Core.DTOs;
 using CourseRegistration.Core.Entities;
 using CourseRegistration.Core.Enums;
+using CourseRegistration.Core.Exceptions;
 using CourseRegistration.Core.Interfaces;
 
 
@@ -32,7 +33,7 @@ namespace CourseRegistration.Service.Services
                         courseId, ct);
 
                     if (course == null)
-                        throw new InvalidOperationException(
+                        throw new ResourceNotFoundException(
                             "Course not found.");
 
                     if (course.StartDate.Date + course.StartTime <= DateTime.Now)
@@ -95,14 +96,14 @@ namespace CourseRegistration.Service.Services
 
                     if (registration == null ||
                         registration.Status != RegistrationStatus.Active)
-                        throw new InvalidOperationException(
+                        throw new ResourceNotFoundException(
                             "Active registration not found.");
 
                     var course = await _courseRepository.GetByIdAsync(
                         courseId, ct);
 
                     if (course == null)
-                        throw new InvalidOperationException(
+                        throw new ResourceNotFoundException(
                             "Course not found.");
 
                     if (course.StartDate.Date + course.StartTime <= DateTime.Now)

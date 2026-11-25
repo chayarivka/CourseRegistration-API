@@ -19,6 +19,11 @@ namespace CourseRegistration.API.Controllers
         }
 
         [HttpPost("{courseId}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Register(
             int courseId,
             CancellationToken cancellationToken)
@@ -39,6 +44,11 @@ namespace CourseRegistration.API.Controllers
         }
 
         [HttpDelete("{courseId}")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> CancelRegistration(
             int courseId,
             CancellationToken cancellationToken)

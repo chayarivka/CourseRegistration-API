@@ -1,4 +1,5 @@
 ﻿
+using CourseRegistration.Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 
@@ -30,6 +31,7 @@ namespace CourseRegistration.API.Middleware
                    ScopeContext.PushProperty("CorrelationId", context.TraceIdentifier);
                 int statusCode = ex switch
                 {
+                    ResourceNotFoundException => StatusCodes.Status404NotFound,
                     ArgumentException => StatusCodes.Status400BadRequest,
                     DbUpdateConcurrencyException =>
                         StatusCodes.Status409Conflict,

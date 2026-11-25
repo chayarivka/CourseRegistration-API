@@ -61,6 +61,12 @@ namespace CourseRegistration.API.Controllers
         
         [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Update(
             [FromRoute] int id,
             [FromBody] UpdateCourseDto courseDto,
