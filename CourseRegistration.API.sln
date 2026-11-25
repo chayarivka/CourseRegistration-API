@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseRegistration.Service"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseRegistration.Tests", "CourseRegistration.Tests\CourseRegistration.Tests.csproj", "{9DB44089-7AAE-4BB3-95CA-3F32EBC10A71}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CourseRegistration.Client", "CourseRegistration.Client\CourseRegistration.Client.csproj", "{E9A863B7-2E4C-4F2B-A61C-7ED803600EF8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{413C8E59-7485-49BE-94F8-07F6EC0CD2D4}"
 EndProject
 Global
@@ -43,10 +41,6 @@ Global
 		{9DB44089-7AAE-4BB3-95CA-3F32EBC10A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DB44089-7AAE-4BB3-95CA-3F32EBC10A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DB44089-7AAE-4BB3-95CA-3F32EBC10A71}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E9A863B7-2E4C-4F2B-A61C-7ED803600EF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E9A863B7-2E4C-4F2B-A61C-7ED803600EF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E9A863B7-2E4C-4F2B-A61C-7ED803600EF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E9A863B7-2E4C-4F2B-A61C-7ED803600EF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
