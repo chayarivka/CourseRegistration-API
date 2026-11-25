@@ -1,6 +1,7 @@
 ﻿
 using CourseRegistration.Core.Entities;
 using CourseRegistration.Core.Enums;
+using CourseRegistration.Core.Exceptions;
 using CourseRegistration.Core.Interfaces;
 using CourseRegistration.Service.Services;
 using Moq;
@@ -29,7 +30,7 @@ namespace CourseRegistration.Tests
                 courseRepo.Object);
 
             // Act
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            var exception = await Assert.ThrowsAsync<ResourceNotFoundException>(
                 () => service.RegisterToCourseAsync(1, 99999));
 
             // Assert
