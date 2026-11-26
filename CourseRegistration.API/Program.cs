@@ -15,6 +15,8 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 using CourseRegistration.Data.Seed;
+using CourseRegistration.API.Controllers;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 
 
@@ -128,6 +130,8 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
+    options.OperationFilter<CourseCreationLocationHeaderFilter>();
+
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -190,3 +194,22 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+file sealed class CourseCreationLocationHeaderFilter : IOperationFilter
+{
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    {
+        if (context.MethodInfo.DeclaringType != typeof(CoursesController) ||
+            context.MethodInfo.Name != nameof(CoursesController.Create) ||
+            !operation.Responses.TryGetValue("201", out var created))
+        {
+            return;
+        }
+
+        created.Headers["Location"] = new OpenApiHeader
+        {
+            Description = "URI of the created course. Retrieve it with GET /api/Courses/{id}.",
+            Schema = new OpenApiSchema { Type = "string", Format = "uri" }
+        };
+    }
+}
