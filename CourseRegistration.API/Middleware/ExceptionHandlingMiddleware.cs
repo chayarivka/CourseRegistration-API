@@ -1,7 +1,7 @@
 ﻿
 using CourseRegistration.Core.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using NLog;
+using ScopeContext = NLog.ScopeContext;
 
 namespace CourseRegistration.API.Middleware
 {
@@ -39,33 +39,27 @@ namespace CourseRegistration.API.Middleware
                         StatusCodes.Status409Conflict,
                     _ => StatusCodes.Status500InternalServerError
                 };
-                if (statusCode == StatusCodes.Status409Conflict)
-                {
-                    _logger.LogWarning(ex,
-                        "Conflict occurred. CorrelationId: {CorrelationId}",
-                        context.TraceIdentifier);
-                }
-                else if (statusCode == StatusCodes.Status500InternalServerError)
-                {
-                    _logger.LogError(ex,
-                        "Unexpected error. CorrelationId: {CorrelationId}",
-                        context.TraceIdentifier);
-                }
-                else
-                {
-                    _logger.LogWarning(ex,
-                        "Request rejected. CorrelationId: {CorrelationId}",
-                        context.TraceIdentifier);
-                }
+                var logLevel = statusCode == StatusCodes.Status409Conflict
+                    ? LogLevel.Warning
+                    : LogLevel.Error;
+
+                _logger.Log(logLevel,
+                    "Request failed with HTTP {StatusCode} ({ExceptionType}). CorrelationId: {CorrelationId}",
+                    statusCode, ex.GetType().Name, context.TraceIdentifier);
 
                 context.Response.StatusCode = statusCode;
 
                 await context.Response.WriteAsJsonAsync(new
                 {
                     StatusCode = statusCode,
-                    Message = statusCode == 500
-                        ? "An unexpected error occurred."
-                        : ex.Message,
+                    Message = ex switch
+                    {
+                        DbUpdateConcurrencyException =>
+                            "The course changed while your request was being processed. Refresh the page and try again.",
+                        _ when statusCode == StatusCodes.Status500InternalServerError =>
+                            "An unexpected error occurred.",
+                        _ => ex.Message
+                    },
                     CorrelationId = context.TraceIdentifier
                 });
             }
