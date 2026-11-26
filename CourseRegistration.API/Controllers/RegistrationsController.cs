@@ -1,4 +1,5 @@
 ﻿
+using CourseRegistration.Core.DTOs;
 using CourseRegistration.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -69,6 +70,8 @@ namespace CourseRegistration.API.Controllers
         }
 
         [HttpGet("my-courses")]
+        [ProducesResponseType(typeof(List<MyCourseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetMyCourses(
             CancellationToken cancellationToken)
         {

@@ -18,6 +18,8 @@ namespace CourseRegistration.API.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(CourseResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<CourseResponseDto>> GetById(
             [FromRoute] int id,
             CancellationToken cancellationToken)
@@ -32,6 +34,8 @@ namespace CourseRegistration.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(List<CourseResponseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<List<CourseResponseDto>>> GetAll(
             [FromQuery] CourseQueryDto query,
             CancellationToken cancellationToken)
@@ -45,6 +49,10 @@ namespace CourseRegistration.API.Controllers
        
         [Authorize(Roles = "Admin")]
         [HttpPost]
+        [ProducesResponseType(typeof(CourseResponseDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<CourseResponseDto>> Create(
             [FromBody] CreateCourseDto courseDto,
             CancellationToken cancellationToken)
@@ -83,6 +91,11 @@ namespace CourseRegistration.API.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Delete(
             [FromRoute] int id,
             CancellationToken cancellationToken)

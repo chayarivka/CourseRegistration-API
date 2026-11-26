@@ -17,6 +17,9 @@ namespace CourseRegistration.API.Controllers
         }
 
         [HttpPost("register")]
+        [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status409Conflict)]
         public async Task<ActionResult<LoginResponseDto>> Register(
             [FromBody] RegisterUserDto dto,
             CancellationToken cancellationToken)
@@ -28,6 +31,9 @@ namespace CourseRegistration.API.Controllers
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<LoginResponseDto>> Login(
             [FromBody] LoginDto dto,
             CancellationToken cancellationToken)
