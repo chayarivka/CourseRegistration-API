@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CourseRegistration.API\CourseRegistration.API.csproj" />
     <ProjectReference Include="..\CourseRegistration.Core\CourseRegistration.Core.csproj" />
     <ProjectReference Include="..\CourseRegistration.Data\CourseRegistration.Data.csproj" />
     <ProjectReference Include="..\CourseRegistration.Service\CourseRegistration.Service.csproj" />
